@@ -1,0 +1,17 @@
+== Are you sure you want to delete #{@user.name}?
+
+%form{:action => '/user', :method => 'post'}
+  %label{:for => 'name'} Admin username:
+  %input#name{:type => 'text', :name => 'name'}/
+  %br/
+  
+  %label{:for => 'password'} Password:
+  %input#password{:type => 'password', :name => 'password'}/
+  %br/
+  
+  %input{:type => 'hidden', :name => 'id', :value => @user.id}
+  %input{:type => 'hidden', :name => '_method', :value => 'delete'}
+  
+  %input{:type => 'submit', :value => 'Delete User'}
+  
+  
