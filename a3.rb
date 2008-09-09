@@ -28,13 +28,11 @@ DataMapper.auto_upgrade!
 helpers do
   class AMI
     def self.call(caller, callee, callerid_number, callerid_name)
-      
       args = { :channel => 'Local/s@a3-call/n', 
                :application => 'Dial', 
                :data => callee, 
                :caller_id => "#{callerid_name} <#{callerid_number}>", 
                :variable => "CALLER=#{caller}" }
-
       Adhearsion.proxy.originate args
     end
   end
@@ -45,14 +43,16 @@ get '/call' do
 end
 
 post '/call' do
-  @user = User.get(params[:id])
-  if Digest::MD5.hexdigest(params[:password]) == @user.password
-    @callee = @user.trunk + "/" + params[:callee]
-    
-    AMI.call @user.extension, @callee, @user.callerid_number, @user.callerid_name
+  if @user = User.get(params[:id])
+    if Digest::MD5.hexdigest(params[:password]) == @user.password
+      @callee = @user.trunk + "/" + params[:callee]
+      AMI.call @user.extension, @callee, @user.callerid_number, @user.callerid_name
+    else
+      throw :halt, [403, 'Invalid Password']
+    end
   else
-    throw :halt, [403, 'Invalid Password']
-  end    
+    throw :halt, [404, "Invalid User"]
+  end
 end
 
 post '/user' do
@@ -74,10 +74,9 @@ get '/user/add' do
 end
 
 get '/user/:id' do
-  @user = User.get(params[:id])
-  if @user
+  if @user = User.get(params[:id])
     haml :user_show
   else
-    redirect '/'
+    throw :halt, [404, "Invalid User"]
   end
 end
