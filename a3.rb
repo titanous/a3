@@ -59,17 +59,40 @@ post '/call' do
 end
 
 post '/user' do
-  @user = User.new(:name            => params[:name], 
-                  :extension        => params[:extension], 
-                  :trunk            => params[:trunk],
-                  :callerid_name    => params[:callerid_name],
-                  :callerid_number  => params[:callerid_number],
-                  :password         => Digest::MD5.hexdigest(params[:password]),
-                  :admin            => params[:admin])
+  @user = User.new(:name             => params[:name], 
+                   :extension        => params[:extension], 
+                   :trunk            => params[:trunk],
+                   :callerid_name    => params[:callerid_name],
+                   :callerid_number  => params[:callerid_number],
+                   :password         => Digest::MD5.hexdigest(params[:password]),
+                   :admin            => params[:admin])
   if @user.save
     redirect "/user/#{@user.id}"
   else
-    redirect '/'
+    throw :halt, [500, "Save Error"]
+  end
+end
+
+put '/user' do
+  if @user = User.get(params[:id])
+    if Digest::MD5.hexdigest(params[:password]) == @user.password
+      @user.attributes = {:name            => params[:name], 
+                          :extension       => params[:extension], 
+                          :trunk           => params[:trunk],
+                          :callerid_name   => params[:callerid_name],
+                          :callerid_number => params[:callerid_number],
+                          :password        => Digest::MD5.hexdigest(params[:new_password]),
+                          :admin           => params[:admin]}
+      if @user.save
+        redirect "/user/#{@user.id}"
+      else
+        throw :halt, [500, "Save Error"]
+      end
+    else
+      throw :halt, [403, 'Invalid Password']
+    end
+  else
+    throw :halt, [404, "Invalid User"]
   end
 end
 
@@ -77,6 +100,16 @@ get '/user/add' do
   @title = 'Add user - a3'
   @form = true
   haml :user_add
+end
+
+get '/user/:id/edit' do
+  if @user = User.get(params[:id])
+    @title = "#{@user.name} - Edit user - a3"
+    @form = true
+    haml :user_edit
+  else
+    throw :halt, [404, "Invalid User"]
+  end
 end
 
 get '/user/:id' do

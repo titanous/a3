@@ -11,3 +11,9 @@
 == CallerID Number: #{@user.callerid_number}
 %br/
 == Password (hashed): #{@user.password}
+%br/
+Admin:
+- if @user.admin
+  Yes
+- else
+  No
