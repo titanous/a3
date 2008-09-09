@@ -39,6 +39,8 @@ helpers do
 end
 
 get '/call' do
+  @title = 'Make call - a3'
+  @form = true
   haml :call
 end
 
@@ -70,13 +72,22 @@ post '/user' do
 end
 
 get '/user/add' do
+  @title = 'Add user - a3'
+  @form = true
   haml :user_add
 end
 
 get '/user/:id' do
   if @user = User.get(params[:id])
+    @title = "#{@user.name} - View user - a3"
     haml :user_show
   else
     throw :halt, [404, "Invalid User"]
   end
 end
+
+get '/res/form.css' do
+  content_type 'text/css', :charset => 'utf-8'
+  sass :form
+end
+

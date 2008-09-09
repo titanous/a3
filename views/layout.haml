@@ -1,4 +1,9 @@
-%html
+!!! 1.1
+%html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", 'xml:lang' => "en" }
   %head
+    %title== #{@title || 'a3'}
+    %meta{ 'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf-8' }/
+    - if @form
+      %link{ :rel => 'stylesheet', :type => 'text/css', :href => '/res/form.css' }/
   %body
     = yield
