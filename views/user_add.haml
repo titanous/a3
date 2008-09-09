@@ -1,26 +1,33 @@
 %form{:action => '/user', :method => 'post'}
   %label{:for => 'name'} Name:
-  %input{:type => 'text', :name => 'name', :id => 'name'}/
+  %input#name{:type => 'text', :name => 'name'}/
   %br/
 
   %label{:for => 'extension'} Extension:
-  %input{:type => 'text', :name => 'extension', :id => 'extension'}/
+  %input#extension{:type => 'text', :name => 'extension'}/
   %br/
 
   %label{:for => 'trunk'} Trunk:
-  %input{:type => 'text', :name => 'trunk', :id => 'trunk'}/
+  %input#trunk{:type => 'text', :name => 'trunk'}/
   %br/
 
   %label{:for => 'callerid_name'} CallerID Name:
-  %input{:type => 'text', :name => 'callerid_name', :id => 'callerid_name'}/
+  %input#callerid_name{:type => 'text', :name => 'callerid_name'}/
   %br/
 
   %label{:for => 'callerid_number'} CallerID Number:
-  %input{:type => 'text', :name => 'callerid_number', :id => 'callerid_number'}/
+  %input#callerid_number{:type => 'text', :name => 'callerid_number', :id => 'callerid_number'}/
   %br/
 
   %label{:for => 'password'} Password:
-  %input{:type => 'password', :name => 'password', :id => 'password'}/
+  %input#password{:type => 'password', :name => 'password'}/
   %br/
-
+  
+  %span.label Admin:
+  %label.radio{:for => 'admin-true'} Yes
+  %input#admin-true{:type => 'radio', :name => 'admin', :value => 'true'}
+  %label.radio{:for => 'admin-false'} No
+  %input#admin-false{:type => 'radio', :name => 'admin', :value => 'false'}
+  %br/
+  
   %input{:type => 'submit', :value => 'Add User'}

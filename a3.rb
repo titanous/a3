@@ -21,6 +21,7 @@ class User
   property :callerid_name,   String, :nullable => false
   property :callerid_number, String, :nullable => false
   property :password,        String, :nullable => false
+  property :admin,           Boolean
 end
 
 DataMapper.auto_upgrade!
@@ -39,7 +40,7 @@ helpers do
 end
 
 get '/call' do
-  @title = 'Make call - a3'
+  @title = 'Make a call - a3'
   @form = true
   haml :call
 end
@@ -63,7 +64,8 @@ post '/user' do
                   :trunk            => params[:trunk],
                   :callerid_name    => params[:callerid_name],
                   :callerid_number  => params[:callerid_number],
-                  :password         => Digest::MD5.hexdigest(params[:password]))
+                  :password         => Digest::MD5.hexdigest(params[:password]),
+                  :admin            => params[:admin])
   if @user.save
     redirect "/user/#{@user.id}"
   else
