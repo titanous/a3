@@ -46,9 +46,13 @@ end
 
 post '/call' do
   @user = User.get(params[:id])
-  @callee = @user.trunk + "/" + params[:callee]
-  
-  AMI.call @user.extension, @callee, @user.callerid_number, @user.callerid_name
+  if Digest::MD5.hexdigest(params[:password]) == @user.password
+    @callee = @user.trunk + "/" + params[:callee]
+    
+    AMI.call @user.extension, @callee, @user.callerid_number, @user.callerid_name
+  else
+    throw :halt, [403, 'Invalid Password']
+  end    
 end
 
 post '/user' do
