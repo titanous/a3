@@ -40,7 +40,11 @@ helpers do
   end
 end
 
-get '/call/:id/:callee' do
+get '/call' do
+  haml :call
+end
+
+post '/call' do
   @user = User.get(params[:id])
   @callee = @user.trunk + "/" + params[:callee]
   
