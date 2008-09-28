@@ -5,10 +5,15 @@ require 'digest/md5'
 require "yaml"
 require 'drb'
 
-configure do
+configure :development do
   SETTINGS = YAML::load(File.open("settings.yml"))
   Adhearsion = DRbObject.new_with_uri "druby://#{SETTINGS['drb_host']}:#{SETTINGS['drb_port']}"
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/a3.sqlite3")
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/a3.sqlite3")
+end
+
+configure :test do
+    Adhearsion = DRbObject.new_with_uri "druby://#{SETTINGS['drb_host']}:#{SETTINGS['drb_port']}"
+    DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/a3.test.sqlite3")
 end
 
 class User
