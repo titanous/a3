@@ -2,11 +2,11 @@ require 'rubygems'
 require 'sinatra'
 require 'dm-core'
 require 'digest/md5'
-require "yaml"
+require 'yaml'
 require 'drb'
 
 configure :development do
-  SETTINGS = YAML::load(File.open("settings.yml"))
+  SETTINGS = YAML::load(File.open('settings.yml'))
   Adhearsion = DRbObject.new_with_uri "druby://#{SETTINGS['drb_host']}:#{SETTINGS['drb_port']}"
   DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/a3.sqlite3")
 end
@@ -53,13 +53,13 @@ end
 post '/call' do
   if @user = User.get(params[:id])
     if Digest::MD5.hexdigest(params[:password]) == @user.password
-      @callee = @user.trunk + "/" + params[:callee]
+      @callee = @user.trunk + '/' + params[:callee]
       AMI.call @user.extension, @callee, @user.callerid_number, @user.callerid_name
     else
       throw :halt, [403, 'Invalid Password']
     end
   else
-    throw :halt, [404, "Invalid User"]
+    throw :halt, [404, 'Invalid User']
   end
 end
 
@@ -74,7 +74,7 @@ post '/user' do
   if @user.save
     redirect "/user/#{@user.id}"
   else
-    throw :halt, [500, "Save Error"]
+    throw :halt, [500, 'Save Error']
   end
 end
 
@@ -91,13 +91,13 @@ put '/user' do
       if @user.save
         redirect "/user/#{@user.id}"
       else
-        throw :halt, [500, "Save Error"]
+        throw :halt, [500, 'Save Error']
       end
     else
       throw :halt, [403, 'Invalid Password']
     end
   else
-    throw :halt, [404, "Invalid User"]
+    throw :halt, [404, 'Invalid User']
   end
 end
 
@@ -105,15 +105,15 @@ delete '/user' do
   if @user = User.get(params[:id])
     if Digest::MD5.hexdigest(params[:password]) == User.first(:name => params[:name]).password
       if @user.destroy
-        redirect "/user"
+        redirect '/user'
       else
-        throw :halt, [500, "Delete Error"]
+        throw :halt, [500, 'Delete Error']
       end
     else
       throw :halt, [403, 'Invalid admin or password']
     end
   else
-   throw :halt, [404, "Invalid User"]
+   throw :halt, [404, 'Invalid User']
   end
 end
 
@@ -128,7 +128,7 @@ get '/user/:id' do
     @title = "#{@user.name} - View user - a3"
     haml :user_show
   else
-    throw :halt, [404, "Invalid User"]
+    throw :halt, [404, 'Invalid User']
   end
 end
 
@@ -138,7 +138,7 @@ get '/user/:id/edit' do
     @form = true
     haml :user_edit
   else
-    throw :halt, [404, "Invalid User"]
+    throw :halt, [404, 'Invalid User']
   end
 end
 
@@ -148,7 +148,7 @@ get '/user/:id/delete' do
     @form = true
     haml :user_delete
   else
-    throw :halt, [404, "Invalid User"]
+    throw :halt, [404, 'Invalid User']
   end
 end
 
