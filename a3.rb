@@ -117,10 +117,10 @@ delete '/user' do
   end
 end
 
-get '/user/add' do
-  @title = 'add user - a3'
+get '/user/new' do
+  @title = 'new user - a3'
   @form = true
-  haml :user_add
+  haml :user_new
 end
 
 get '/user/:id' do
