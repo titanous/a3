@@ -6,14 +6,14 @@ require 'yaml'
 require 'drb'
 
 configure :development do
-  SETTINGS = YAML::load(File.open('settings.yml'))
+  SETTINGS = YAML.load_file 'settings.yml'
   Adhearsion = DRbObject.new_with_uri "druby://#{SETTINGS['drb_host']}:#{SETTINGS['drb_port']}"
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/a3.sqlite3")
+  DataMapper.setup :default, "sqlite3://#{Dir.pwd}/db/a3.sqlite3"
 end
 
 configure :test do
     Adhearsion = DRbObject.new_with_uri "druby://#{SETTINGS['drb_host']}:#{SETTINGS['drb_port']}"
-    DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/a3.test.sqlite3")
+    DataMapper.setup :default, "sqlite3://#{Dir.pwd}/db/a3.test.sqlite3"
 end
 
 class User
@@ -44,10 +44,10 @@ helpers do
   end
 end
 
-get '/call' do
-  @title = 'Make a call - a3'
+get '/call/new' do
+  @title = 'make a call - a3'
   @form = true
-  haml :call
+  haml :call_new
 end
 
 post '/call' do
@@ -118,14 +118,14 @@ delete '/user' do
 end
 
 get '/user/add' do
-  @title = 'Add user - a3'
+  @title = 'add user - a3'
   @form = true
   haml :user_add
 end
 
 get '/user/:id' do
   if @user = User.get(params[:id])
-    @title = "#{@user.name} - View user - a3"
+    @title = "#{@user.name} - view user - a3"
     haml :user_show
   else
     throw :halt, [404, 'Invalid User']
@@ -134,7 +134,7 @@ end
 
 get '/user/:id/edit' do
   if @user = User.get(params[:id])
-    @title = "#{@user.name} - Edit user - a3"
+    @title = "#{@user.name} - edit user - a3"
     @form = true
     haml :user_edit
   else
@@ -144,7 +144,7 @@ end
 
 get '/user/:id/delete' do
   if @user = User.get(params[:id])
-    @title = "#{@user.name} - Delete user - a3"
+    @title = "#{@user.name} - delete user - a3"
     @form = true
     haml :user_delete
   else
